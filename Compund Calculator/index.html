@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<title>Simple Interest Calculator</title>
+
+<head>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel=”stylesheet” href=”https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css” rel=”nofollow”
+        integrity=”sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm” crossorigin=”anonymous”>
+
+</head>
+
+<body>
+    <div class="bigdiv">
+        <div class="maindiv">
+            <div class="calculator">
+                <div class="title">
+                    <h1>My Compound Calculator</h1>
+                </div>
+                <div class="Tags">
+                    <div class="amount">
+                        <span>Amount</span>
+                        <input type="number" id="Principal">
+                    </div>
+                    <br>
+                    <div class="Rate">
+                        <span id="rate_sign">Rate</span>
+                        <input type="range" id="rate" min="1" max="20" step="0.25" value="10.25"
+                            onchange="updateRate()">
+                        <span id="rate_val">
+                            10.25%
+                        </span>
+                    </div>
+                    <br>
+                    <div class="year">
+                        <span>Number of Years</span>
+                        <input type="range" id="year" min="1" max="30" step="1" value="30" onchange="updateYears()">
+                        <span id="year_val">
+                            30 Years
+                        </span>
+                    </div><br>
+                    <div class="numcomp">
+                        <span>Compounds per Year</span>
+                        <input type="range" id="num_compound" min="1" max="4" step="1" value="1"
+                            onchange="updateCompound()">
+                        <span id="comp_val">
+                            1 Time
+                        </span>
+                    </div>
+                </div><br><br>
+                <button type="button" class="btn btn-outline-primary"
+                    onclick="compute();updateChart()">Calculate</button> <br> <br>
+            </div>
+            <div class="result">
+                <span id="result">
+
+                </span>
+            </div>
+        </div>
+        <div class="seconddiv">
+            <div class="chart">
+                <canvas id="myChart" width="400" height="400"></canvas>
+                <script>
+                    function updateChart() {
+
+                        var years = document.getElementById("year").value;
+                        var principal = document.getElementById("Principal").value;
+                        var compound = document.getElementById("num_compound").value;
+                        var rate = document.getElementById("rate").value;
+
+                        var total_amount = [];
+                        const arr = [];
+
+                        for (let i = 1; i <= years; i++) {
+                            arr.push(i);
+                            total_amount.push(parseFloat((principal * (1 + (rate / 100) / compound) ** (i * compound)).toFixed(2)));
+                        }
+                        var LabelResult = arr;
+                        var DataResult = total_amount;
+
+                        const ctx = document.getElementById('myChart').getContext('2d');
+                        const myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: LabelResult,
+                                datasets: [{
+                                    label: 'Compound Amount',
+                                    data: DataResult,
+                                    backgroundColor: "black",
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Compund Calculator Chart'
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'Amount'
+                                        }
+                                    }],
+                                    xAxes: [{
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'Years'
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+                        myChart.config.data.labels = arr
+                        myChart.data.datasets[0].data[0] = total_amount;
+
+                        myChart.update();
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <footer>
+            &#169; This Calculator belongs to Sam
+        </footer>
+    </div>
+</body>
+
+</html>
